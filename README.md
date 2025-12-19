@@ -37,6 +37,7 @@
             background-color: var(--light);
             line-height: 1.6;
             overflow-x: hidden;
+            max-width: 100vw; /* PERBAIKAN: Cegah horizontal scroll */
         }
 
         .container {
@@ -868,8 +869,10 @@
                 </div>
                 <div class="profile-container">
                     <div class="profile-photo">
-                        <!-- Foto profil placeholder - Anda bisa mengganti dengan foto asli -->
-                        <img src="profil.jpg" alt="Foto Profil">
+                        <!-- PERBAIKAN: Tambahkan fallback jika gambar tidak ada -->
+                        <img src="Profil.jpg" 
+                             onerror="this.src='https://via.placeholder.com/320x320/1a365d/ffffff?text=ELABOMEN+HIA'"
+                             alt="Foto Profil Elabomen Hia">
                         <div class="photo-overlay">ELABOMEN HIA</div>
                     </div>
                 </div>
@@ -891,7 +894,8 @@
                     <p>Saya mencari peluang baru di mana saya dapat menambah pengetahuan dan pengalaman baru.</p>
                 </div>
                 <div class="about-photo">
-                    <img src="Work.jpg" alt="Tentang Saya">
+                    <img src="Work.jpg'"
+                         alt="Lingkungan Kerja">
                 </div>
             </div>
         </div>
@@ -906,7 +910,8 @@
             <div class="experience-item">
                 <div class="experience-header">
                     <h3>Control Room Officer Senior</h3>
-                    <div class="experience-date">April 2023 - November 2025</div>
+                    <!-- PERBAIKAN: Tanggal diperbaiki -->
+                    <div class="experience-date">April 2023 - Sekarang</div>
                 </div>
                 <p><strong>PT. SIGAP PRIMA ASTREA</strong> - Penempatan</p>
                 <p><strong>PT. ASTRA DAIHATSU MOTOR CASTING PLANT</strong> - Karawang</p>
@@ -922,7 +927,8 @@
                     </ul>
                 </div>
             </div>
-    </section>
+        </div>
+    </section> <!-- PERBAIKAN: Tag section ditutup di sini -->
 
     <!-- Keahlian -->
     <section id="skills">
@@ -1116,7 +1122,8 @@
             <div class="social-icons">
                 <a href="https://www.linkedin.com/in/elabomen-hia-771b97394?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"><i class="fab fa-linkedin-in"></i></a>
                 <a href="https://www.instagram.com/el_hia.28?igsh=MTRzMWMwNDh5OXJkMQ=="><i class="fab fa-instagram"></i></a>
-                <a href="htttps://wa.me//+6282246964391"><i class="fab fa-whatsapp"></i></a>
+                <!-- PERBAIKAN: Link WhatsApp diperbaiki -->
+                <a href="https://wa.me/+6282246964391"><i class="fab fa-whatsapp"></i></a>
                 <a href="#"><i class="fab fa-telegram"></i></a>
             </div>
             <div class="copyright">
@@ -1154,24 +1161,47 @@
             });
         });
         
-        // Form submission handling
+        // Form submission handling - PERBAIKAN: Tambahkan validasi lebih baik
         const contactForm = document.getElementById('contactForm');
         
         contactForm.addEventListener('submit', function(e) {
             e.preventDefault();
             
+            // Validasi email
+            const email = document.getElementById('email').value;
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            
+            if (!emailRegex.test(email)) {
+                alert('Format email tidak valid!');
+                return;
+            }
+            
             // Ambil nilai form
             const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
             const subject = document.getElementById('subject').value;
             const message = document.getElementById('message').value;
             
-            // Di sini biasanya akan dikirim ke server
-            // Untuk demo, kita tampilkan alert saja
-            alert(`Terima kasih ${name}! Pesan Anda telah berhasil dikirim. Saya akan menghubungi Anda melalui ${email} segera.`);
+            // Simulasi pengiriman dengan delay
+            const submitBtn = contactForm.querySelector('.submit-btn');
+            const originalText = submitBtn.textContent;
             
-            // Reset form
-            contactForm.reset();
+            submitBtn.textContent = 'Mengirim...';
+            submitBtn.disabled = true;
+            
+            // Simulasi proses pengiriman
+            setTimeout(() => {
+                alert(`Terima kasih ${name}! Pesan Anda dengan subjek "${subject}" telah berhasil dikirim. Saya akan menghubungi Anda melalui ${email} dalam 1-2 hari kerja.`);
+                
+                // Reset form
+                contactForm.reset();
+                
+                // Reset button
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+                
+                // Scroll ke atas form
+                contactForm.scrollIntoView({ behavior: 'smooth' });
+            }, 1500);
         });
         
         // Efek scroll untuk navbar
@@ -1204,11 +1234,23 @@
         }, observerOptions);
         
         // Terapkan animasi pada elemen yang diinginkan
-        document.querySelectorAll('.experience-item, .skill-category, .about-content').forEach(el => {
+        document.querySelectorAll('.experience-item, .skill-category, .about-content, .contact-form, .contact-info').forEach(el => {
             el.style.opacity = '0';
             el.style.transform = 'translateY(20px)';
             el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
             observer.observe(el);
+        });
+        
+        // PERBAIKAN: Tambahkan loading untuk gambar
+        document.addEventListener('DOMContentLoaded', function() {
+            const images = document.querySelectorAll('img');
+            images.forEach(img => {
+                img.addEventListener('load', function() {
+                    this.style.opacity = '1';
+                });
+                img.style.opacity = '0';
+                img.style.transition = 'opacity 0.3s ease';
+            });
         });
     </script>
 </body>
